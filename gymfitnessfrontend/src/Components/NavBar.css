@@ -1,0 +1,56 @@
+/* MAIN NAVBAR */
+.mainDiv {
+  width: 100vw;
+  height: 70px;
+  background-color: #172e4e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
+/* LOGO */
+.logo {
+  height: 50px;
+  width: auto;
+}
+
+/* NAV LIST */
+.RightSide ul {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* NAV LINKS */
+.RightSide ul li a {
+  color: white;
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+/* HOVER EFFECT */
+.RightSide ul li a:hover {
+  color: #008eec;
+  transform: scale(1.05);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .mainDiv {
+    flex-direction: column;
+    height: auto;
+    padding: 15px;
+  }
+
+  .RightSide ul {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+  }
+}
