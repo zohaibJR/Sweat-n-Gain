@@ -4,25 +4,25 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
+
 import userRoutes from "./routes/userRoutes.js";
+import attendanceRoutes from "./routes/attendanceRoutes.js";
 
 const app = express();
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connect DB
 connectDB();
 
-// Test Route
 app.get("/", (req, res) => {
   res.send("Backend running...");
 });
 
-// Main Routes
 app.use("/api/users", userRoutes);
+app.use("/api/attendance", attendanceRoutes);
 
-// Server Start
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT}`)
+);

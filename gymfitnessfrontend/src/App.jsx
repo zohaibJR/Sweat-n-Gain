@@ -6,21 +6,15 @@ import NavBar from './Components/NavBar.jsx';
 import Attendence from './Pages/Attendence.jsx';
 import Aboutus from './Pages/Aboutus.jsx';
 
-// ------------------- ProtectedRoute Component -------------------
+// Protected Route
 function ProtectedRoute({ children }) {
   const isLoggedIn = localStorage.getItem("isLoggedIn");
-  if (!isLoggedIn) {
-    // Redirect to login if not logged in
-    return <Navigate to="/" replace />;
-  }
-  return children;
+  return isLoggedIn ? children : <Navigate to="/" replace />;
 }
 
-// ------------------- AppContent -------------------
 function AppContent() {
   const location = useLocation();
 
-  // Routes where Navbar should be hidden
   const hiddenPaths = ["/", "/signup"];
   const shouldShowNavbar = !hiddenPaths.includes(location.pathname.toLowerCase());
 
@@ -29,50 +23,26 @@ function AppContent() {
       {shouldShowNavbar && <NavBar />}
 
       <Routes>
-        {/* Public routes */}
+        {/* Public */}
         <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Protected routes */}
-        <Route 
-          path="/dashboard" 
-          element={
-            <ProtectedRoute>
-              <DashBoard />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/attendence" 
-          element={
-            <ProtectedRoute>
-              <Attendence />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/aboutus" 
-          element={
-            <ProtectedRoute>
-              <Aboutus />
-            </ProtectedRoute>
-          } 
-        />
+        {/* Protected */}
+        <Route path="/dashboard" element={<ProtectedRoute><DashBoard /></ProtectedRoute>} />
+        <Route path="/attendence" element={<ProtectedRoute><Attendence /></ProtectedRoute>} />
+        <Route path="/aboutus" element={<ProtectedRoute><Aboutus /></ProtectedRoute>} />
 
-        {/* Catch-all redirect for unknown routes */}
+        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );
 }
 
-// ------------------- Main App -------------------
-function App() {
+export default function App() {
   return (
     <BrowserRouter>
       <AppContent />
     </BrowserRouter>
   );
 }
-
-export default App;

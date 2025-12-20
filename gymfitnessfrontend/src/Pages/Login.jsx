@@ -22,8 +22,9 @@ function Login() {
             });
 
             if(res.data.success){
-                // Redirect to dashboard
-                navigate('/dashboard');
+                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("userEmail", email); // <-- store email
+                    navigate('/dashboard');
             } else {
                 alert("Login failed");
             }

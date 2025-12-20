@@ -1,25 +1,30 @@
 import mongoose from 'mongoose';
 
 const attendanceSchema = new mongoose.Schema({
-    user: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User', 
-        required: true 
-    },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
 
-    date: { 
-        type: Date, 
-        required: true 
-    }, // The day the user checked in
+  date: {
+    type: Date,
+    required: true
+  },
 
-    weight: { 
-        type: Number, 
-        required: true 
-    }, // weight in kg or lbs
-}, 
-{ timestamps: true });
+  status: {
+    type: String,
+    enum: ['Present', 'Absent'],
+    required: true
+  },
 
-// Ensure a user can have only one attendance record per day
+  weight: {
+    type: Number,
+    required: true
+  }
+}, { timestamps: true });
+
+// One attendance per user per day
 attendanceSchema.index({ user: 1, date: 1 }, { unique: true });
 
 export default mongoose.model('Attendance', attendanceSchema);
