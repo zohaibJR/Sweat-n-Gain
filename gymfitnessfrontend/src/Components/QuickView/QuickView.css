@@ -1,8 +1,8 @@
 .QuickView
 {
     width: 100vw;
-    height: 250px;
-    /* border: 3px solid red; */
+    height: 300px;
+    border: 3px solid red;
     display: flex;
     flex-direction: row;
     justify-content: center;
