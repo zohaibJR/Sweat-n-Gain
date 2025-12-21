@@ -47,3 +47,38 @@ export const submitAttendance = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getLast7DaysWeight = async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const last7Days = new Date(today);
+    last7Days.setDate(last7Days.getDate() - 6);
+
+    const records = await Attendance.find({
+      user: user._id,
+      date: { $gte: last7Days, $lte: today }
+    })
+    .sort({ date: 1 })
+    .select("date weight status");
+
+    res.json(records);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
