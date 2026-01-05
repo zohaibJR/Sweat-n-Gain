@@ -1,9 +1,12 @@
+/* ===================== */
+/* DESKTOP (unchanged) */
+/* ===================== */
 .MainQuote {
     width: 60vw;
     height: 75px;
     border: 3px solid blue;
 
-    margin: 0 auto; /* centers horizontally only */
+    margin: 0 auto;
 
     display: flex;
     justify-content: center;
@@ -17,8 +20,10 @@
     border: 1px solid rgba(255, 255, 255, 0.15);
 
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, background 0.3s ease;
 }
 
+/* Hover effect (kept) */
 .MainQuote:hover {
     transform: translateY(-4px);
     background: rgba(23, 46, 78, 0.8);
@@ -32,3 +37,34 @@
     text-align: center;
 }
 
+
+/* ===================== */
+/* TABLET */
+/* ===================== */
+@media (max-width: 1024px) {
+    .MainQuote {
+        width: 80vw;
+        height: 70px;
+    }
+
+    .MainQuote h2 {
+        font-size: 16px;
+    }
+}
+
+
+/* ===================== */
+/* MOBILE */
+/* ===================== */
+@media (max-width: 480px) {
+    .MainQuote {
+        width: 90vw;
+        height: auto;
+        padding: 12px 10px;
+    }
+
+    .MainQuote h2 {
+        font-size: 14px;
+        line-height: 1.4;
+    }
+}
