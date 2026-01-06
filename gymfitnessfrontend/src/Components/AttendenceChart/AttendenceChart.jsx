@@ -39,7 +39,7 @@ function AttendanceLast10DaysPie() {
     labels: ['Present', 'Absent'],
     datasets: [
       {
-        label: 'Attendance',
+        label: 'days',
         data: [attendance.presentCount, attendance.absentCount],
         backgroundColor: ['rgb(255, 206, 86)', 'rgb(255, 99, 132)'], // Yellow for Present, Red for Absent
         hoverOffset: 10
