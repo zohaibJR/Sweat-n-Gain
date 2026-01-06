@@ -3,7 +3,7 @@ import '../SummaryCards/SummaryCards.css'
 import AttendenceCard from '../AttendenceCard/AttendenceCard'
 import MonthlyAttendence from '../MonthlyAttendeceCard/MonthlyAttendence'
 import CurrentWeight from '../CurrentWeight/CurrentWeight'
-import WeightChange from '../WeightChange/WeightChange'
+// import WeightChange from '../WeightChange/WeightChange'
 
 function SummaryCards() {
   return (
@@ -13,7 +13,7 @@ function SummaryCards() {
         <AttendenceCard />
         <MonthlyAttendence />
         <CurrentWeight />
-        <WeightChange />
+        {/* <WeightChange /> */}
       </div>
     </div>
   )

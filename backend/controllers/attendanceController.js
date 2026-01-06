@@ -132,3 +132,121 @@ export const getMonthlyAttendance = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+// ---------------- WEIGHT CHANGE ----------------
+export const getWeightChange = async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Get earliest and latest attendance records
+    const records = await Attendance.find({ user: user._id }).sort({ date: 1 }); // oldest to newest
+
+    if (records.length < 2) {
+      return res.json({ change: 0 }); // not enough data
+    }
+
+    const firstWeight = records[0].weight;
+    const latestWeight = records[records.length - 1].weight;
+
+    const change = latestWeight - firstWeight;
+
+    res.json({
+      firstWeight,
+      latestWeight,
+      change
+    });
+
+  } catch (error) {
+    console.error("Weight change fetch failed:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+// ---------------- MONTHLY ATTENDANCE PIE ----------------
+export const getMonthlyAttendancePie = async (req, res) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) return res.status(400).json({ message: "Email is required" });
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    const totalDays = endOfMonth.getDate();
+
+    const presentCount = await Attendance.countDocuments({
+      user: user._id,
+      status: 'Present',
+      date: { $gte: startOfMonth, $lte: endOfMonth }
+    });
+
+    const absentCount = totalDays - presentCount;
+
+    res.json({ presentCount, absentCount, totalDays, month: now.toLocaleString('default', { month: 'long' }) });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// ---------------- LAST 10 DAYS ATTENDANCE PIE ----------------
+export const getLast10DaysAttendancePie = async (req, res) => {
+  try {
+    const { email } = req.query;
+    if (!email) return res.status(400).json({ message: "Email is required" });
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Find user registration date (first attendance or user creation)
+    const firstAttendance = await Attendance.findOne({ user: user._id }).sort({ date: 1 });
+    const registrationDate = firstAttendance ? firstAttendance.date : user.createdAt;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Start date = max(today - 9 days, registration date)
+    const tenDaysAgo = new Date(today);
+    tenDaysAgo.setDate(today.getDate() - 9);
+
+    const startDate = registrationDate > tenDaysAgo ? registrationDate : tenDaysAgo;
+
+    // Get attendance records in that period
+    const records = await Attendance.find({
+      user: user._id,
+      date: { $gte: startDate, $lte: today }
+    }).sort({ date: 1 });
+
+    // Calculate Present and Absent days
+    const totalDays = Math.ceil((today - startDate) / (1000 * 60 * 60 * 24)) + 1; // inclusive
+    const presentCount = records.filter(r => r.status === 'Present').length;
+    const absentCount = totalDays - presentCount;
+
+    res.json({
+      totalDays,
+      presentCount,
+      absentCount
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+
